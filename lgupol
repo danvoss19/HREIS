@@ -1,0 +1,19 @@
+# Human Resource Employee Information System (HREIS)
+
+The **Human Resource Employee Information System (HREIS)** is a web-based application designed to help HR departments efficiently manage employee records, personal data sheets, leave applications, and other HR-related processes.
+
+It provides role-based access for **Admins** and **Employees**, ensuring secure handling of sensitive HR data.
+
+---
+
+## 🚀 Features
+
+- Secure login/logout with session management
+- Admin & Employee dashboards
+- Employee information management
+- Personal Data Sheet (PDS) preview & download
+- Leave application & history tracking
+- Department management
+- Responsive design (desktop & mobile friendly)
+
+---

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Data Filter</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        padding: 20px;
+    }
+
+    /* Filter Button */
+    .filter-btn {
+        background-color: #7b57e0;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal Box */
+    .modal {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .modal h3 {
+        margin-bottom: 15px;
+    }
+
+    .modal label {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        cursor: pointer;
+    }
+
+    .modal input[type="checkbox"], 
+    .modal input[type="radio"] {
+        margin-right: 8px;
+    }
+
+    /* Buttons */
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .cancel-btn {
+        background: #ddd;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .apply-btn {
+        background-color: #7b57e0;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* Table Styling */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background: #f4f4f4;
+    }
+</style>
+</head>
+<body>
+
+<!-- Filter Button -->
+<button class="filter-btn" id="openFilter">Filter</button>
+
+<!-- Employee Data Table -->
+<table id="employeeTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>Juan Dela Cruz</td><td>HR</td><td>Active</td></tr>
+        <tr><td>Maria Santos</td><td>Engineering</td><td>Inactive</td></tr>
+        <tr><td>Pedro Reyes</td><td>Accounting Office</td><td>Active</td></tr>
+        <tr><td>Ana Lopez</td><td>Health Office</td><td>Inactive</td></tr>
+        <tr><td>Luis Fernandez</td><td>HR</td><td>Active</td></tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal-overlay" id="filterModal">
+    <div class="modal">
+        <h3>Filter</h3>
+
+        <strong>Department</strong>
+        <div id="departmentList"></div>
+
+        <br>
+        <strong>Status</strong>
+        <label><input type="radio" name="status" value="Active"> Active</label>
+        <label><input type="radio" name="status" value="Inactive"> Inactive</label>
+        <label><input type="radio" name="status" value=""> Any</label>
+
+        <div class="modal-actions">
+            <button class="cancel-btn" id="closeFilter">Cancel</button>
+            <button class="apply-btn" id="applyFilter">Apply</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Example dynamic data (replace with fetch from API later)
+    const departments = [
+        "HR", "Engineering", "Accounting Office", "Health Office"
+    ];
+
+    const departmentList = document.getElementById("departmentList");
+
+    // Generate department checkboxes dynamically
+    departments.forEach(dep => {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = dep;
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + dep));
+        departmentList.appendChild(label);
+    });
+
+    // Modal controls
+    const modal = document.getElementById("filterModal");
+    document.getElementById("openFilter").onclick = () => modal.style.display = "flex";
+    document.getElementById("closeFilter").onclick = () => modal.style.display = "none";
+
+    // Apply filter
+    document.getElementById("applyFilter").onclick = () => {
+        const selectedDepartments = [...departmentList.querySelectorAll("input:checked")].map(cb => cb.value);
+        const status = document.querySelector('input[name="status"]:checked')?.value || "";
+
+        const rows = document.querySelectorAll("#employeeTable tbody tr");
+
+        rows.forEach(row => {
+            const dep = row.cells[1].textContent.trim();
+            const stat = row.cells[2].textContent.trim();
+
+            const depMatch = selectedDepartments.length === 0 || selectedDepartments.includes(dep);
+            const statMatch = status === "" || status === stat;
+
+            row.style.display = (depMatch && statMatch) ? "" : "none";
+        });
+
+        modal.style.display = "none";
+    };
+</script>
+
+</body>
+</html>
